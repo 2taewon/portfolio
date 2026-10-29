@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio
 
-## Getting Started
+백엔드 개발자 포트폴리오 사이트입니다. Next.js + TypeScript + Tailwind CSS로 만들었고, 모든 페이지가 빌드 시점에 정적으로 생성됩니다.
 
-First, run the development server:
+## 실행
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000
+npm run build   # 배포 전 빌드 확인
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 내용 수정
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+화면에 나오는 내용은 모두 두 파일에 있습니다. 코드를 건드리지 않고 이 두 파일만 고치면 됩니다.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| 파일 | 내용 |
+| --- | --- |
+| `src/data/profile.ts` | 이름, 한 줄 소개, 자기소개, 연락처, 기술 스택, 경력 |
+| `src/data/projects.ts` | 프로젝트 목록과 상세 (문제 → 접근 → 해결 → 결과 → 배운 점) |
 
-## Learn More
+- 이력서: `public/resume.pdf`에 파일을 넣으면 "이력서 다운로드" 버튼이 동작합니다. 쓰지 않으려면 `profile.ts`에서 `resumeUrl`을 지우세요.
+- 프로젝트를 추가하면 `/projects/{slug}` 상세 페이지가 자동으로 생깁니다.
 
-To learn more about Next.js, take a look at the following resources:
+## 구성
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `GET /about` 같은 엔드포인트 라벨: 섹션마다 붙는 백엔드 콘셉트 포인트
+- Human ⇄ JSON 토글 (헤더 오른쪽): 같은 데이터를 API 응답 형태로 보여줌 (`src/components/Section.tsx`, `JsonView.tsx`)
+- 라이트/다크 모드: OS 설정을 따르고, 직접 바꾸면 브라우저에 저장됨
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 배포 (Vercel)
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. GitHub 저장소에 푸시
+2. [vercel.com](https://vercel.com)에서 GitHub로 로그인 → **Add New Project** → 저장소 선택 → **Deploy**
+3. 이후에는 `main` 브랜치에 푸시할 때마다 자동으로 배포됩니다.
