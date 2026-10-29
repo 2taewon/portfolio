@@ -14,10 +14,10 @@ export function Timeline({ items }: { items: TimelineItem[] }) {
             <p className="leading-6">
               <span className="mr-2 inline-block w-12 font-mono text-xs font-semibold text-ok">{e.kind}</span>
               <span className="font-semibold">{e.title}</span>
-              <span className="text-muted"> · {e.subtitle}</span>
             </p>
+            <p className="pl-14 text-sm text-muted">{e.subtitle}</p>
             {e.highlights && (
-              <ul className="mt-2 space-y-1.5 text-[15px]">
+              <ul className="mt-2 space-y-1.5 pl-14 text-[15px]">
                 {e.highlights.map((h) => (
                   <li key={h} className="flex gap-2">
                     <span className="text-accent" aria-hidden>

@@ -107,9 +107,9 @@ export default function Home() {
               <div>
                 <p className="leading-6">
                   <span className="font-semibold">{p.title}</span>
-                  {p.url && (
-                    <a href={p.url} target="_blank" rel="noreferrer" className="ml-2 text-sm text-accent underline-offset-4 hover:underline">
-                      영상 ↗
+                  {p.link && (
+                    <a href={p.link.url} target="_blank" rel="noreferrer" className="ml-2 text-sm text-accent underline-offset-4 hover:underline">
+                      {p.link.label} ↗
                     </a>
                   )}
                 </p>
@@ -121,8 +121,17 @@ export default function Home() {
         </ul>
       </Section>
 
-      <Section id="history" endpoint="GET /history" title="이력" data={{ timeline: profile.timeline, awards: profile.awards }}>
+      <Section
+        id="history"
+        endpoint="GET /history"
+        title="이력"
+        data={{ timeline: profile.timeline, certifications: profile.certifications, awards: profile.awards }}
+      >
         <Timeline items={profile.timeline} />
+        <h3 className="mt-12 text-sm font-semibold text-muted">자격증</h3>
+        <div className="mt-4">
+          <AwardList items={profile.certifications} />
+        </div>
         <h3 className="mt-12 text-sm font-semibold text-muted">수상</h3>
         <div className="mt-4">
           <AwardList items={profile.awards} />

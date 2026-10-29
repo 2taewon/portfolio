@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Section } from "@/components/Section";
@@ -101,6 +102,19 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
               <dd className="inline">{project.target}</dd>
             </div>
           </dl>
+
+          {project.image && (
+            <div className="relative mt-8 aspect-[1200/630] overflow-hidden rounded-xl border border-border">
+              <Image
+                src={project.image}
+                alt={`${project.title} 화면`}
+                fill
+                preload
+                sizes="(min-width: 768px) 720px, 100vw"
+                className="object-cover object-top"
+              />
+            </div>
+          )}
 
           {project.metrics && (
             <div className="mt-8 grid grid-cols-1 gap-5 rounded-xl border border-border bg-surface p-6 sm:grid-cols-3">
