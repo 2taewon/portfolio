@@ -150,10 +150,25 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
                 ))}
               </div>
             </Block>
-            {project.architecture && (
+            {project.architectureImage ? (
               <Block title="Architecture">
-                <ArchitectureFlow nodes={project.architecture} />
+                <a href={project.architectureImage} target="_blank" rel="noreferrer">
+                  <Image
+                    src={project.architectureImage}
+                    alt={`${project.title} 아키텍처`}
+                    width={1600}
+                    height={900}
+                    sizes="(min-width: 768px) 720px, 100vw"
+                    className="h-auto w-full rounded-xl border border-border bg-white"
+                  />
+                </a>
               </Block>
+            ) : (
+              project.architecture && (
+                <Block title="Architecture">
+                  <ArchitectureFlow nodes={project.architecture} />
+                </Block>
+              )
             )}
             {project.troubleshooting && (
               <Block title="트러블슈팅">

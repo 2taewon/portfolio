@@ -28,6 +28,7 @@ export type Project = {
   myWork: { title: string; details: string[] }[]; // 본인이 맡은 기능
   metrics?: Metric[];
   architecture?: string[]; // 요청 흐름 순서대로
+  architectureImage?: string; // public/projects/ 아래 아키텍처 다이어그램, 있으면 흐름 대신 표시
   troubleshooting?: Troubleshooting[];
   learnings?: string;
   links?: { label: string; url: string }[];
@@ -87,6 +88,7 @@ export const projects: Project[] = [
       { label: "데이터 3개월 분량 처리량", before: "25 req/s", after: "168 req/s" },
     ],
     architecture: ["React (S3)", "CloudFront", "Spring Boot (EC2)", "PostgreSQL", "Grafana Alloy → Grafana Cloud"],
+    architectureImage: "/projects/starlight-letter-architecture.png",
     troubleshooting: [
       {
         title: "동시 로그인이 사이트 전체를 30초 멈춤",
@@ -182,6 +184,7 @@ export const projects: Project[] = [
     ],
     metrics: [{ label: "대시보드 조회 쿼리 수", before: "28회", after: "2회" }],
     architecture: ["Vue.js", "Spring Boot (Security · JWT · STOMP)", "PostgreSQL", "Redis"],
+    architectureImage: "/projects/ott-moa-architecture.png",
     troubleshooting: [
       {
         title: "페이징 조회 시 N+1 문제 해결",
@@ -261,11 +264,12 @@ export const projects: Project[] = [
       },
     ],
     architecture: ["Vue.js", "Spring Boot (Security · JWT)", "PostgreSQL", "Redis (환율 캐시)"],
+    architectureImage: "/projects/korex-architecture.png",
     links: [
       { label: "GitHub", url: "https://github.com/MSA-Team4-Final/Back-end/tree/dev" },
       { label: "ERD", url: "https://www.erdcloud.com/d/LLmJn2QGpo6oZpCYt" },
       { label: "WBS", url: "https://docs.google.com/spreadsheets/d/17_kVIbu_xpuhjBFN6ybfEuSW_x_1kCimHhIaMcAYaGQ/edit" },
-      { label: "발표 자료", url: "https://docs.google.com/presentation/d/1nwdRUx-dPlwSn0D6F3ItlJWdl6T5Hh7zgI0YPhviq-I/edit" },
+      { label: "발표 자료", url: "https://docs.google.com/presentation/d/1NaKP19-d03obZmYq4M4vf_i74lDOxHaQuf0icUrw-Eg/edit?usp=sharing" },
     ],
   },
 ];
@@ -291,7 +295,7 @@ export const otherProjects: {
     summary:
       "졸업 작품. 기억을 잃은 사진작가의 이야기를 다룬 어드벤처 게임으로, 레벨 디자인을 맡아 맵 로딩 · 조명 버그를 재현해 고치며 약 1년간 개발. 국내학술대회 우수 논문상 수상 · 5명",
     stack: ["Unreal Engine 5", "Blender"],
-    link: { label: "영상", url: "https://youtu.be/j4aQ4t9TZPo" },
+    link: { label: "Notion", url: "https://shore-jaw-781.notion.site/Memory-Studio-265c2f5b1de380939795e4ba13eb30b5" },
   },
 ];
 
