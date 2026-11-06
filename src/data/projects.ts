@@ -41,11 +41,11 @@ export const projects: Project[] = [
     summary:
       "도림천 다리의 QR을 찍고 짧은 편지를 강물에 띄우는 모바일 웹 서비스. 직접 배포해 운영했고, 출시 전 k6 부하 테스트로 사이트를 멈추게 하던 장애 4건을 찾아 고쳤습니다.",
     image: "/projects/starlight-letter.png",
-    period: "2026.09 – 2026.10",
+    period: "2026.09 – 2026.11",
     team: "2명",
     stack: ["Java 17", "Spring Boot 3.4", "PostgreSQL 16", "JdbcTemplate", "Flyway", "React", "TypeScript", "Docker Compose", "AWS EC2 · S3 · CloudFront", "Grafana Cloud", "k6", "JUnit5"],
     overview:
-      "관악구 별빛내린천(도림천)의 세 다리에서 매주 바뀌는 질문에 1~150자 편지로 답해 강물에 띄우고, 다른 사람의 편지를 건져 읽는 서비스입니다. 읽기는 어디서나 되지만 쓰기는 그 다리의 QR을 찍은 사람만 3시간 동안 할 수 있어, 실제 산책길과 온라인을 잇습니다. 메모리 2GB짜리 서버 한 대에서 멈추지 않는 것을 목표로 만들었습니다.",
+      "관악구 별빛내린천(도림천)의 세 다리에서 매주 바뀌는 질문에 1~150자 편지로 답해 강물에 띄우고, 다른 사람의 편지를 건져 읽는 서비스입니다. 읽기는 어디서나 되지만 쓰기는 그 다리의 QR을 찍은 사람만 3시간 동안 할 수 있어, 실제 산책길과 온라인을 잇습니다. 메모리 2GB짜리 서버 한 대에서 멈추지 않는 것을 목표로 만들었고, 2026년 10월 29일부터 11월 14일까지 실제로 운영했습니다.",
     target: "도림천을 산책하는 지역 주민",
     features: [
       "QR 작성 허가: 다리 포스터 QR로 3시간 통행권 발급, 열쇠는 주소창에서 바로 삭제",
@@ -135,6 +135,7 @@ export const projects: Project[] = [
     links: [
       { label: "서비스", url: "https://www.starletter.co.kr/" },
       { label: "GitHub", url: "https://github.com/Starlight-Letter/backend" },
+      { label: "Instagram 홍보 게시물", url: "https://www.instagram.com/p/DfZAE9Ykxh1/" },
     ],
   },
   {
