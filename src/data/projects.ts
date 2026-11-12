@@ -14,6 +14,14 @@ export type Troubleshooting = {
   result?: string;
 };
 
+export type Operation = {
+  period: string; // 측정 기간과 출처
+  metrics: Metric[];
+  image?: string; // public/projects/ 아래 모니터링 캡처
+  imageSize?: { width: number; height: number };
+  notes: string[];
+};
+
 export type Project = {
   slug: string; // URL에 쓰이는 식별자 (/projects/{slug})
   title: string;
@@ -30,6 +38,7 @@ export type Project = {
   architecture?: string[]; // 요청 흐름 순서대로
   architectureImage?: string; // public/projects/ 아래 아키텍처 다이어그램, 있으면 흐름 대신 표시
   troubleshooting?: Troubleshooting[];
+  operation?: Operation; // 실제 운영 기간의 결과
   learnings?: string;
   links?: { label: string; url: string }[];
 };
@@ -39,7 +48,7 @@ export const projects: Project[] = [
     slug: "starlight-letter",
     title: "별빛안부 · Starlight Letter",
     summary:
-      "도림천 다리의 QR을 찍고 짧은 편지를 강물에 띄우는 모바일 웹 서비스. 직접 배포해 운영했고, 출시 전 k6 부하 테스트로 사이트를 멈추게 하던 장애 4건을 찾아 고쳤습니다.",
+      "도림천 다리의 QR을 찍고 짧은 편지를 강물에 띄우는 모바일 웹 서비스. 출시 전 k6 부하 테스트로 사이트를 멈추게 하던 장애 4건을 찾아 고쳤고, 직접 배포해 2주 반 동안 서버 오류 0건으로 운영했습니다.",
     image: "/projects/starlight-letter.png",
     period: "2026.09 – 2026.11",
     team: "2명",
@@ -70,6 +79,7 @@ export const projects: Project[] = [
         details: [
           "AWS EC2에 Docker Compose로 배포, 운영 설정 정리",
           "Grafana Alloy → Grafana Cloud 연결, 운영 대시보드와 알림 구성",
+          "무료 플랜의 14일 보관 기간이 끝나기 전에 Prometheus API로 1분 단위 지표를 CSV로 백업하는 스크립트 작성",
         ],
       },
       {
@@ -127,11 +137,26 @@ export const projects: Project[] = [
         cause:
           "CPU는 낮은데 느렸습니다. pg_stat_activity로 확인하니 정렬 데이터가 work_mem을 넘어 디스크 임시 파일을 기다리고 있었고, 느린 집계가 커넥션 풀을 차지했습니다.",
         solution: ["좁은 키(id, 수, 시각)로 먼저 집계하고 편지 본문은 상위 후보에만 조인", "순위만 10초 캐시하고 숨김 · 삭제 여부는 매번 새로 조회", "빠진 인덱스 추가"],
-        result: "같은 데이터에서 168 req/s, 실패 0%가 되었습니다.",
+        result: "같은 데이터에서 25 → 168 req/s, 실패 0%가 되었습니다.",
       },
     ],
+    operation: {
+      period: "2026.10.29 – 11.12 · Grafana Cloud에 1분 간격으로 쌓인 14일치 지표 기준",
+      metrics: [
+        { label: "서버 오류 (5xx)", after: "0건" },
+        { label: "평균 응답시간 (중앙값)", after: "5ms" },
+        { label: "최대 트래픽", after: "0.81 req/s" },
+        { label: "서버 메모리 (2GB)", after: "평소 46%" },
+      ],
+      image: "/projects/starlight-letter-grafana.png",
+      imageSize: { width: 1707, height: 1288 },
+      notes: [
+        "14일 동안 요청 약 7,100건, 가장 몰린 순간도 0.81 req/s로 출시 전에 검증한 181 req/s 안에서 운영했습니다. p95 응답시간은 대부분 50ms 이하, DB 커넥션 풀 대기는 0이었습니다.",
+        "운영 3일째(11/1) 회원가입 흐름을 바꿔 배포할 때 컨테이너 교체로 1분 중단이 있었습니다(가동률 99.99%).",
+      ],
+    },
     learnings:
-      "실패율 0%인 시나리오 안에도 진짜 버그가 숨어 있을 수 있다는 것을 배웠습니다. 처음 측정에서 나온 높은 실패율은 대부분 측정 스크립트 문제였고, 작성 제한 버그는 엣지 케이스를 따로 설계하고 나서야 드러났습니다. 그 뒤로는 숫자를 믿기 전에 측정 방법부터 의심하고, 고치기 전에 테스트로 먼저 재현합니다.",
+      "실패율 0%인 시나리오 안에도 진짜 버그가 숨어 있을 수 있다는 것을 배웠습니다. 처음 측정에서 나온 높은 실패율은 대부분 측정 스크립트 문제였고, 작성 제한 버그는 엣지 케이스를 따로 설계하고 나서야 드러났습니다. 그 뒤로는 숫자를 믿기 전에 측정 방법부터 의심하고, 고치기 전에 테스트로 먼저 재현합니다. 실제 운영에서는 트래픽보다 배포 중 1분 중단처럼 예상하지 못한 곳에서 문제가 났고, 다음에는 서버에서 빌드하지 않고 미리 만든 이미지로 교체해 이런 중단을 줄이고 싶습니다.",
     links: [
       { label: "서비스", url: "https://www.starletter.co.kr/" },
       { label: "GitHub", url: "https://github.com/Starlight-Letter/backend" },
@@ -245,7 +270,7 @@ export const projects: Project[] = [
         details: [
           "계좌 생성과 계좌 상세 · 거래 내역 조회 API",
           "외부 은행 계좌에서 충전 · 출금과 거래 내역",
-          "거래 비밀번호 검증: 4자리 숫자, 생년월일 · 전화번호와 겹치지 않게 검사하고 BCrypt로 저장",
+          "거래 비밀번호 규칙 설계(4자리 숫자, 생년월일 · 전화번호와 겹치지 않게)에 참여하고, 송금 · 출금 시 BCrypt 해시로 확인",
         ],
       },
       {

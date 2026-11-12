@@ -8,6 +8,9 @@ import { ArchitectureFlow, MetricValue, Tag } from "@/components/ui";
 import { profile } from "@/data/profile";
 import { getProject, projects, type Troubleshooting } from "@/data/projects";
 
+// 프로젝트 페이지는 generateStaticParams로 빌드 때 모두 만들어 두므로, 개발 서버의 "즉시 이동" 검사에서 뺀다.
+export const instant = false;
+
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
 }
@@ -51,16 +54,27 @@ function TroubleshootingCase({ index, item }: { index: number; item: Troubleshoo
     ["문제", <p key="p">{item.problem}</p>],
     ...(item.cause ? [["원인", <p key="c">{item.cause}</p>] as [string, ReactNode]] : []),
     ["해결", <List key="s" items={item.solution} />],
-    ...(item.result ? [["결과", <p key="r" className="font-semibold">{item.result}</p>] as [string, ReactNode]] : []),
   ];
 
+  // 제목과 결과만 먼저 보여 주고, 문제 · 원인 · 해결은 눌러서 펼친다.
   return (
-    <article className="rounded-xl border border-border bg-surface p-5 sm:p-6">
-      <h3 className="font-bold tracking-tight">
-        <span className="mr-2 font-mono text-sm text-accent">#{index + 1}</span>
-        {item.title}
-      </h3>
-      <dl className="mt-4 space-y-4">
+    <details className="group rounded-xl border border-border bg-surface transition-colors hover:border-accent/60">
+      <summary className="flex cursor-pointer list-none items-start gap-3 rounded-xl p-5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:p-6 [&::-webkit-details-marker]:hidden">
+        <div className="min-w-0 flex-1">
+          <h3 className="font-bold tracking-tight">
+            <span className="mr-2 font-mono text-sm text-accent">#{index + 1}</span>
+            {item.title}
+          </h3>
+          {item.result && <p className="mt-1.5 text-[15px] leading-relaxed text-muted">→ {item.result}</p>}
+        </div>
+        <span
+          className="mt-0.5 shrink-0 text-muted transition-transform duration-200 ease-out group-open:rotate-180 motion-reduce:transition-none"
+          aria-hidden
+        >
+          ▾
+        </span>
+      </summary>
+      <dl className="space-y-4 border-t border-border px-5 pt-4 pb-5 sm:px-6 sm:pb-6">
         {rows.map(([label, body]) => (
           <div key={label} className="grid gap-1 sm:grid-cols-[3.5rem_1fr] sm:gap-4">
             <dt className="text-sm font-semibold text-muted">{label}</dt>
@@ -68,7 +82,7 @@ function TroubleshootingCase({ index, item }: { index: number; item: Troubleshoo
           </div>
         ))}
       </dl>
-    </article>
+    </details>
   );
 }
 
@@ -176,6 +190,31 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
                   {project.troubleshooting.map((t, i) => (
                     <TroubleshootingCase key={t.title} index={i} item={t} />
                   ))}
+                </div>
+              </Block>
+            )}
+            {project.operation && (
+              <Block title="운영 결과">
+                <p className="text-sm text-muted">{project.operation.period}</p>
+                <div className="mt-4 grid grid-cols-2 gap-5 rounded-xl border border-border bg-surface p-5 sm:grid-cols-4 sm:p-6">
+                  {project.operation.metrics.map((m) => (
+                    <MetricValue key={m.label} metric={m} />
+                  ))}
+                </div>
+                {project.operation.image && (
+                  <a href={project.operation.image} target="_blank" rel="noreferrer" className="mt-5 block">
+                    <Image
+                      src={project.operation.image}
+                      alt={`${project.title} 운영 기간 Grafana 대시보드`}
+                      width={project.operation.imageSize?.width ?? 1600}
+                      height={project.operation.imageSize?.height ?? 1200}
+                      sizes="(min-width: 768px) 720px, 100vw"
+                      className="h-auto w-full rounded-xl border border-border"
+                    />
+                  </a>
+                )}
+                <div className="mt-5">
+                  <List items={project.operation.notes} />
                 </div>
               </Block>
             )}
